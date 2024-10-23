@@ -37,20 +37,14 @@
 #if USE_PARTITION_MANAGER
 #include <pm_config.h>
 
-#if CONFIG_BUILD_WITH_TFM
-	#define PM_ADDRESS_OFFSET (PM_MCUBOOT_PAD_SIZE + PM_TFM_SIZE)
-#else
-	#define PM_ADDRESS_OFFSET (PM_MCUBOOT_PAD_SIZE)
-#endif
-
 #ifdef CONFIG_MCUBOOT
 	/* lib is part of MCUboot -> operate on the primart application slot */
 	#define ACTIVE_SLOT_ID		PM_MCUBOOT_PRIMARY_ID
 #else
 	/* lib is part of the App -> operate on active slot */
-#if (PM_ADDRESS - PM_ADDRESS_OFFSET) == PM_MCUBOOT_PRIMARY_ADDRESS
+#if PM_NAME == app
 	#define ACTIVE_SLOT_ID		PM_MCUBOOT_PRIMARY_ID
-#elif (PM_ADDRESS - PM_ADDRESS_OFFSET) == PM_MCUBOOT_SECONDARY_ADDRESS
+#elif PM_NAME == mcuboot_secondary_app
 	#define ACTIVE_SLOT_ID		PM_MCUBOOT_SECONDARY_ID
 #else
 	#error Missing partition definitions.
